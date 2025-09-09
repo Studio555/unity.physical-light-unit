@@ -27,6 +27,10 @@ namespace UnityEditor.Rendering.Universal
         // Common properties 
         public SerializedProperty intensity { get; }
 
+        // Interior Light properties
+        public SerializedProperty isInteriorLight { get; }
+        public SerializedProperty interiorBoostMultiplier { get; }
+
         // HDRP specific properties
         public SerializedProperty enableSpotReflector;
         public SerializedProperty luxAtDistance;
@@ -124,6 +128,10 @@ namespace UnityEditor.Rendering.Universal
                 intensity = o.Find("m_Intensity");
                 enableSpotReflector = o.Find("m_EnableSpotReflector");
                 luxAtDistance = o.Find("m_LuxAtDistance");
+
+                // Interior Light properties
+                isInteriorLight = o.Find("m_IsInteriorLight");
+                interiorBoostMultiplier = o.Find("m_InteriorBoostMultiplier");
 
                 volumetricDimmer = o.Find("m_VolumetricDimmer");
                 volumetricFadeDistance = o.Find("m_VolumetricFadeDistance");

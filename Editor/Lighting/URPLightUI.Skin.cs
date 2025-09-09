@@ -214,6 +214,11 @@ namespace UnityEditor.Rendering.Universal
             public static readonly GUIContent RenderingLayers = EditorGUIUtility.TrTextContent("Rendering Layers", "Select the Rendering Layers that the Light affects. This Light affects objects where at least one Rendering Layer value matches.");
             public static readonly GUIContent RenderingLayersDisabled = EditorGUIUtility.TrTextContent("Rendering Layers", "Rendering Layers are disabled because they have a small GPU performance cost. To enable this setting, go to the active Universal Render Pipeline Asset, and enable Lighting -> Use Rendering Layers.");
             
+            // Interior Light styles
+            public static readonly GUIContent InteriorLightHeader = EditorGUIUtility.TrTextContent("Interior Lighting", "Settings for compensating interior lights in daylit environments.");
+            public static readonly GUIContent IsInteriorLight = EditorGUIUtility.TrTextContent("Interior Light", "Enable compensation boost for interior lighting to compete with outdoor lighting. This multiplies the light's effective output to make it visible in daylit scenes while preserving the physically accurate lumen values you set.");
+            public static readonly GUIContent InteriorBoostMultiplier = EditorGUIUtility.TrTextContent("Interior Boost", "Multiplier applied to compensate for outdoor lighting. Higher values make interior lights more visible in daylit environments. Typical values: 5-10x for overcast, 10-20x for bright sun.");
+
             // Additional light data
             public static readonly GUIContent directionalIntensity = EditorGUIUtility.TrTextContent("Intensity (Lux)", "Illuminance of the Directional Light, at ground level, in lux.");
             public static readonly GUIContent punctualIntensity = EditorGUIUtility.TrTextContent("Intensity (Lumen)", "Luminous power of the Light in lumen.");

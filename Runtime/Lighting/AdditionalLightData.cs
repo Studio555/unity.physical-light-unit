@@ -162,6 +162,43 @@ namespace UnityEngine.Rendering.Universal
             }
         }
 
+        // Interior Light Boost System
+        [SerializeField]
+        bool m_IsInteriorLight = false;
+        /// <summary>
+        /// Whether this light is an interior light that should receive compensation boost
+        /// </summary>
+        public bool isInteriorLight
+        {
+            get => m_IsInteriorLight;
+            set
+            {
+                if (m_IsInteriorLight == value)
+                    return;
+
+                m_IsInteriorLight = value;
+                UpdateLightIntensity();
+            }
+        }
+
+        [SerializeField, Range(1.0f, 100.0f)]
+        float m_InteriorBoostMultiplier = 10.0f;
+        /// <summary>
+        /// Multiplier applied to interior lights to compensate for outdoor lighting
+        /// </summary>
+        public float interiorBoostMultiplier
+        {
+            get => m_InteriorBoostMultiplier;
+            set
+            {
+                if (m_InteriorBoostMultiplier == value)
+                    return;
+
+                m_InteriorBoostMultiplier = Mathf.Clamp(value, 1.0f, 100.0f);
+                UpdateLightIntensity();
+            }
+        }
+
         // Not used for directional lights.
         [SerializeField, FormerlySerializedAs("fadeDistance")]
         float m_FadeDistance = 10000.0f;
@@ -599,23 +636,30 @@ namespace UnityEngine.Rendering.Universal
 
         void SetLightIntensityPunctual(float intensity)
         {
+            // Apply interior boost if enabled
+            float finalIntensity = intensity;
+            if (m_IsInteriorLight && (legacyLight.type == LightType.Point || legacyLight.type == LightType.Spot))
+            {
+                finalIntensity *= m_InteriorBoostMultiplier;
+            }
+
             switch (legacyLight.type)
             {
                 case LightType.Directional:
-                    legacyLight.intensity = intensity; // Always in lux
+                    legacyLight.intensity = finalIntensity; // Always in lux
                     break;
                 case LightType.Point:
                     if (lightUnit == LightUnit.Candela)
-                        legacyLight.intensity = intensity;
+                        legacyLight.intensity = finalIntensity;
                     else
-                        legacyLight.intensity = LightUtils.ConvertPointLightLumenToCandela(intensity);
+                        legacyLight.intensity = LightUtils.ConvertPointLightLumenToCandela(finalIntensity);
                     break;
                 case LightType.Spot:
                     if (lightUnit == LightUnit.Candela)
                     {
                         // When using candela, reflector don't have any effect. Our intensity is candela = lumens/steradian and the user
                         // provide desired value for an angle of 1 steradian.
-                        legacyLight.intensity = intensity;
+                        legacyLight.intensity = finalIntensity;
                     }
                     else  // lumen
                     {
@@ -624,24 +668,24 @@ namespace UnityEngine.Rendering.Universal
                             // If reflector is enabled all the lighting from the sphere is focus inside the solid angle of current shape
                             // if (spotLightShape == SpotLightShape.Cone)
                             // {
-                                legacyLight.intensity = LightUtils.ConvertSpotLightLumenToCandela(intensity, legacyLight.spotAngle * Mathf.Deg2Rad, true);
+                                legacyLight.intensity = LightUtils.ConvertSpotLightLumenToCandela(finalIntensity, legacyLight.spotAngle * Mathf.Deg2Rad, true);
                             // }
                             // else if (spotLightShape == SpotLightShape.Pyramid)
                             // {
                             //     float angleA, angleB;
                             //     LightUtils.CalculateAnglesForPyramid(aspectRatio, legacyLight.spotAngle * Mathf.Deg2Rad, out angleA, out angleB);
                             //
-                            //     legacyLight.intensity = LightUtils.ConvertFrustrumLightLumenToCandela(intensity, angleA, angleB);
+                            //     legacyLight.intensity = LightUtils.ConvertFrustrumLightLumenToCandela(finalIntensity, angleA, angleB);
                             // }
                             // else // Box shape, fallback to punctual light.
                             // {
-                            //     legacyLight.intensity = LightUtils.ConvertPointLightLumenToCandela(intensity);
+                            //     legacyLight.intensity = LightUtils.ConvertPointLightLumenToCandela(finalIntensity);
                             // }
                         }
                         else
                         {
                             // No reflector, angle act as occlusion of point light.
-                            legacyLight.intensity = LightUtils.ConvertPointLightLumenToCandela(intensity);
+                            legacyLight.intensity = LightUtils.ConvertPointLightLumenToCandela(finalIntensity);
                         }
                     }
                     break;
