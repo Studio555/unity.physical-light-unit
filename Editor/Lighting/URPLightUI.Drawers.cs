@@ -5,7 +5,6 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using LightUnit = UnityEngine.Rendering.Universal.LightUnit;
 #if XR_MANAGEMENT_4_0_1_OR_NEWER
 using UnityEditor.XR.Management;
 #endif
@@ -25,12 +24,11 @@ namespace UnityEditor.Rendering.Universal
             Rendering = 1 << 3,
             Shadows = 1 << 4,
             LightCookie = 1 << 5,
-            InteriorLighting = 1 << 6,
                 
             /// TODO
             // add
-            Volumetric = 1 << 7,
-            CelestialBody = 1 << 8,
+            Volumetric = 1 << 6,
+            CelestialBody = 1 << 7,
         }
 
         static readonly ExpandedState<Expandable, Light> k_ExpandedState = new(~-1, "URP");
@@ -74,14 +72,6 @@ namespace UnityEditor.Rendering.Universal
                     DrawLightIntensityGUILayout,
                     DrawEmissionContent),
                 DrawEmissionAdditionalContent),
-            CED.Conditional(
-                (serializedLight, editor) => !serializedLight.settings.lightType.hasMultipleDifferentValues && 
-                                           (serializedLight.settings.light.type == LightType.Point || 
-                                            serializedLight.settings.light.type == LightType.Spot),
-                CED.FoldoutGroup(Styles.InteriorLightHeader, 
-                    Expandable.InteriorLighting, 
-                    k_ExpandedState,
-                    DrawInteriorLightContent)),
             CED.FoldoutGroup(LightUI.Styles.renderingHeader,
                 Expandable.Rendering,
                 k_ExpandedState,
@@ -191,42 +181,8 @@ namespace UnityEditor.Rendering.Universal
                     serializedLight.Apply();
                 }
             }
-        }
-
-        static void DrawInteriorLightContent(SerializedHDLight serializedLight, Editor owner)
-        {
-            // Only show for point and spot lights
-            if (serializedLight.settings.lightType.hasMultipleDifferentValues)
-                return;
-                
-            var lightType = serializedLight.settings.light.type;
-            if (lightType != LightType.Point && lightType != LightType.Spot)
-                return;
-
-            EditorGUI.BeginChangeCheck();
             
-            EditorGUILayout.PropertyField(serializedLight.isInteriorLight, Styles.IsInteriorLight);
             
-            if (serializedLight.isInteriorLight.boolValue)
-            {
-                using (new EditorGUI.IndentLevelScope())
-                {
-                    EditorGUILayout.PropertyField(serializedLight.interiorBoostMultiplier, Styles.InteriorBoostMultiplier);
-                    
-                    // Show helpful info about the boost
-                    var lu = serializedLight.lightUnit.GetEnumValue<LightUnit>();
-                    if (lu == LightUnit.Lumen)
-                    {
-                        float boostedValue = serializedLight.intensity.floatValue * serializedLight.interiorBoostMultiplier.floatValue;
-                        EditorGUILayout.HelpBox($"Effective output: {boostedValue:F0} lumens", MessageType.Info);
-                    }
-                }
-            }
-            
-            if (EditorGUI.EndChangeCheck())
-            {
-                serializedLight.Apply();
-            }
         }
 
         internal static void SyncLightAndShadowLayers(SerializedHDLight serializedHdLight, SerializedProperty serialized)
