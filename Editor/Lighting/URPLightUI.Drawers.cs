@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using LightUnit = UnityEngine.Rendering.Universal.LightUnit;
 #if XR_MANAGEMENT_4_0_1_OR_NEWER
 using UnityEditor.XR.Management;
 #endif
@@ -213,8 +214,8 @@ namespace UnityEditor.Rendering.Universal
                     EditorGUILayout.PropertyField(serializedLight.interiorBoostMultiplier, Styles.InteriorBoostMultiplier);
                     
                     // Show helpful info about the boost
-                    var lightUnit = serializedLight.lightUnit.GetEnumValue<LightUnit>();
-                    if (lightUnit == LightUnit.Lumen)
+                    var lu = serializedLight.lightUnit.GetEnumValue<LightUnit>();
+                    if (lu == LightUnit.Lumen)
                     {
                         float boostedValue = serializedLight.intensity.floatValue * serializedLight.interiorBoostMultiplier.floatValue;
                         EditorGUILayout.HelpBox($"Effective output: {boostedValue:F0} lumens", MessageType.Info);
@@ -280,6 +281,28 @@ namespace UnityEditor.Rendering.Universal
             using (new EditorGUI.IndentLevelScope())
                 serializedHdLight.settings.DrawArea();
         }
+
+        // Override by URPLightUI.PhysicalUnit !
+        /*static void DrawEmissionContent(SerializedLight serializedLight, Editor owner)
+        {
+            serializedLight.settings.DrawIntensity();
+            serializedLight.settings.DrawBounceIntensity();
+
+            if (!serializedLight.settings.lightType.hasMultipleDifferentValues)
+            {
+                var lightType = serializedLight.settings.light.type;
+                if (lightType != LightType.Directional)
+                {
+#if UNITY_2020_1_OR_NEWER
+                    serializedLight.settings.DrawRange();
+#else
+                    serializedLight.settings.DrawRange(false);
+#endif
+                }
+            }
+
+            DrawLightCookieContent(serializedLight, owner);
+        }*/
 
         static void DrawRenderingContent(SerializedHDLight serializedLight, Editor owner)
         {
