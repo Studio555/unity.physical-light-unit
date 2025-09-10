@@ -1,11 +1,11 @@
 {
-  "name": "555.physical-light-unit",
+  "name": "com.studio555.physical-light-unit",
   "description": "Custom Studio555 version of Unity's Physical Light Units for Universal Render Pipeline (URP).",
-  "version": "15.0.4",
+  "version": "15.0.5",
   "unity": "2022.3",
   "displayName": "Physical Light Unit",
   "author": {
-    "name": "michael.lam @ Unity Technologies"
+    "name": "michael.lam @ Unity Technologies - modified by Studio555"
   },
   "license": "Unity Companion License",
   "dependencies": {
