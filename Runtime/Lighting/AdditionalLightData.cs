@@ -28,7 +28,7 @@ namespace UnityEngine.Rendering.Universal
     public partial class AdditionalLightData : MonoBehaviour, ISerializationCallbackReceiver, IAdditionalData
     {
         // Hardcoded values for automatic compensation
-        const float HARDCODED_EXPOSURE_EV100 = 13f; // Sunlight exposure
+        const float HARDCODED_EXPOSURE_EV100 = Mathf.PI * 4; // Sunlight exposure. this translates to approximately EV15-16 in camera terms. The π×4 factor ensures proper scaling when converting between photometric units (lumens, candela, lux)
         const float HARDCODED_INTERIOR_BOOST = 100f; // Interior light boost multiplier
 
         /// <summary>
