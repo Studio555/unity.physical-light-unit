@@ -267,7 +267,7 @@ namespace UnityEditor.Rendering.Universal
             {
                 EditorGUI.BeginChangeCheck();
                 GUI.enabled = UniversalRenderPipeline.asset.useRenderingLayers;
-                EditorGUILayout.PropertyField(
+                EditorUtils.DrawRenderingLayerMask(
                     serializedLight.renderingLayers,
                     UniversalRenderPipeline.asset.useRenderingLayers ? Styles.RenderingLayers : Styles.RenderingLayersDisabled
                 );
@@ -389,7 +389,7 @@ namespace UnityEditor.Rendering.Universal
                             using (new EditorGUI.IndentLevelScope())
                             {
                                 EditorGUI.BeginChangeCheck();
-                                EditorGUILayout.PropertyField(serializedLight.shadowRenderingLayers, Styles.ShadowLayer);
+                                EditorUtils.DrawRenderingLayerMask(serializedLight.shadowRenderingLayers, Styles.ShadowLayer);
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     serializedLight.settings.light.renderingLayerMask = serializedLight.shadowRenderingLayers.intValue;
