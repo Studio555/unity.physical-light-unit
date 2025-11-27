@@ -267,14 +267,10 @@ namespace UnityEditor.Rendering.Universal
             {
                 EditorGUI.BeginChangeCheck();
                 GUI.enabled = UniversalRenderPipeline.asset.useRenderingLayers;
-
-                // FIXME: Disabled for now - not compatible with newer versions of URP
-                /*
-                EditorUtils.DrawRenderingLayerMask(
+                EditorUtils.PropertyField(
                     serializedLight.renderingLayers,
                     UniversalRenderPipeline.asset.useRenderingLayers ? Styles.RenderingLayers : Styles.RenderingLayersDisabled
                 );
-                */
                 GUI.enabled = true;
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -393,10 +389,7 @@ namespace UnityEditor.Rendering.Universal
                             using (new EditorGUI.IndentLevelScope())
                             {
                                 EditorGUI.BeginChangeCheck();
-                                // FIXME: Disabled for now - not compatible with newer versions of URP
-                                /*
-                                EditorUtils.DrawRenderingLayerMask(serializedLight.shadowRenderingLayers, Styles.ShadowLayer);
-                                */
+                                EditorGUILayout.PropertyField(serializedLight.shadowRenderingLayers, Styles.ShadowLayer);
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     serializedLight.settings.light.renderingLayerMask = serializedLight.shadowRenderingLayers.intValue;
