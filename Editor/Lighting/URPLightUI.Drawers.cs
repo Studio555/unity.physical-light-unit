@@ -267,7 +267,7 @@ namespace UnityEditor.Rendering.Universal
             {
                 EditorGUI.BeginChangeCheck();
                 GUI.enabled = UniversalRenderPipeline.asset.useRenderingLayers;
-                EditorUtils.PropertyField(
+                EditorGUILayout.PropertyField(
                     serializedLight.renderingLayers,
                     UniversalRenderPipeline.asset.useRenderingLayers ? Styles.RenderingLayers : Styles.RenderingLayersDisabled
                 );
